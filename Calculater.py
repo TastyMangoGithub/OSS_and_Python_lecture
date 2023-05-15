@@ -19,9 +19,21 @@ class Subject:
 
 def InputSubject(arr):
     subjectName = input("과목명을 입력하세요:\n")
-    subjectCredit = int(input("학점을 입력하세요:\n"))
-    subjectGrade = input("평점을 입력하세요:\n")
+    if subjectName == "":
+        raise Exception("Empty Input")
 
+    subjectCreditStr = input("학점을 입력하세요:\n")
+    if subjectCreditStr == "":
+        raise Exception("Empty Input")
+    if subjectCreditStr != "1" and subjectCreditStr != "2" and subjectCreditStr != "3":
+        raise Exception("Unexpected Input")
+    subjectCredit = int(subjectCreditStr)
+
+    subjectGrade = input("평점을 입력하세요:\n")
+    if subjectGrade == "":
+        raise Exception("Empty Input")
+    if subjectGrade != "A" and subjectGrade != "A+" and subjectGrade != "B" and subjectGrade != "B+" and subjectGrade != "C" and subjectGrade != "C+" and subjectGrade != "D" and subjectGrade != "D+" and subjectGrade != "F":
+        raise Exception("Unexpected Input")
     if subjectName in arr:
         if arr[subjectName].GetFloatGrade() < Subject.Str2FloatGrade(subjectGrade):
             arr[subjectName] = Subject(subjectName,subjectCredit,subjectGrade)
@@ -44,7 +56,10 @@ while workType != 5:
     print("\n")
 
     if workType == 1:
-        InputSubject(subjectDict)
+        try:
+            InputSubject(subjectDict)
+        except Exception:
+            print("잘못된 입력입니다.")
 
     elif workType == 2:
         for subject in subjectDict.values():
