@@ -1,7 +1,10 @@
 class Subject:
+    gradeList = ['A','B','C','D','F','A+','B+','C+','D+'];
     def __init__(this,name = "",credit = 0,grade = ""):
         this.name = name
         this.credit = credit
+        if grade not in gradeList:
+            raise Exception("Unexpected Grade")
         this.grade = grade
 
     def __repr__(this):
@@ -12,28 +15,28 @@ class Subject:
 
     @staticmethod
     def Str2FloatGrade(grade):
+        if grade not in gradeList:
+            raise Exception("Unexpected Grade")
         return 0.0 if(grade=="F") else 68.5-ord(grade[0])+len(grade)*0.5
 
     def GetFloatGrade(this):
         return Subject.Str2FloatGrade(this.grade)
 
+def Input_Advanced(prompt = "",checkList = [],blackList = [],formatType = str):
+    inputString = input(prompt)
+    if inputString in blackList:
+        raise Exception("Unpermitted Input " + inputString)
+    if inputString not in checkList and checkList != []:
+        raise Exception("Unexpected Input " + inputString)
+
+    return formatType(inputString)
+
 def InputSubject(arr):
-    subjectName = input("과목명을 입력하세요:\n")
-    if subjectName == "":
-        raise Exception("Empty Input")
 
-    subjectCreditStr = input("학점을 입력하세요:\n")
-    if subjectCreditStr == "":
-        raise Exception("Empty Input")
-    if subjectCreditStr != "1" and subjectCreditStr != "2" and subjectCreditStr != "3":
-        raise Exception("Unexpected Input")
-    subjectCredit = int(subjectCreditStr)
+    subjectName = Input_Advanced("과목명을 입력하세요:\n",blackList = [""])
+    subjectCredit = Input_Advanced("학점을 입력하세요:\n",["1","2","3"],[""],int)
+    subjectGrade = Input_Advanced("평점을 입력하세요:\n",blackList = [""])
 
-    subjectGrade = input("평점을 입력하세요:\n")
-    if subjectGrade == "":
-        raise Exception("Empty Input")
-    if subjectGrade != "A" and subjectGrade != "A+" and subjectGrade != "B" and subjectGrade != "B+" and subjectGrade != "C" and subjectGrade != "C+" and subjectGrade != "D" and subjectGrade != "D+" and subjectGrade != "F":
-        raise Exception("Unexpected Input")
     if subjectName in arr:
         if arr[subjectName].GetFloatGrade() < Subject.Str2FloatGrade(subjectGrade):
             arr[subjectName] = Subject(subjectName,subjectCredit,subjectGrade)
@@ -52,7 +55,8 @@ subjectDict = dict()
 workType = 0
 
 while workType != 5:
-    workType = int(input("작업을 선택하세요.\n1. 입력\n2. 출력\n3. 조회\n4. 계산\n5. 종료\n"))
+    
+    workType = ord((input("작업을 선택하세요.\n1. 입력\n2. 출력\n3. 조회\n4. 계산\n5. 종료\n")+" ")[0])-ord("0");
     print("\n")
 
     if workType == 1:
